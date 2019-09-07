@@ -24,9 +24,40 @@
 由于逻辑比较简单，就直接自己实现了，主要思路如下：
 
 **1. 玩家初始位置定位在迷宫入口**
-
+```python
+if __name__ == '__main__':
+    # 生成迷宫与入口
+    size = random_maze_size()
+    MAZE, ENTRANCE, EXIT = generate_maze(size, size)
+    SOLVE_THREAD = threading.Thread(target=solve_maze, args=(MAZE, ENTRANCE, EXIT, draw_maze))
+    SOLVE_THREAD.start()
+```
 **2. 获取玩家上下左右四个相邻位置的值和位置**
+```python
+# 单元格类型
+# 0 - 路，1 - 墙，2-走过的路，4-死胡同，不在迷宫里或是已经走过又回退回来，说明此路不通
+class CellType:
+    ROAD = 0
+    WALL = 1
+    WALKED = 2
+    DEAD = 3
+    
+def valid(maze, x, y):
+    if x < 0 or y < 0:
+        return False
+    if x >= len(maze) or y >= len(maze):
+        return False
+    val = maze[y][x]
+    if val == CellType.WALL or val == CellType.DEAD:
+        return False
+    return val, x, y
 
+
+def neighbors(maze, pos):
+    x, y = pos
+    t, r, d, l = valid(maze, x, y - 1), valid(maze, x + 1, y), valid(maze, x, y + 1), valid(maze, x - 1, y)
+    return t, r, d, l
+```
 **3. 对获取到的相邻四个位置进行处理，返回最推荐走的位置与值**
 ```python
 # 单元格类型
@@ -56,6 +87,17 @@ def suggest_pos(cells):
 - 如果没有推荐的路，游戏结束，迷宫有问题，无解
 - **走** 这个动作，就用到了递归，继续调用`solve_maze`方法，位置参数改为推荐的下一步的位置
 - 重复以上步骤直到当前位置与出口位置重叠，迷宫走完，游戏结束
-
+```python
+    next_pos = suggest_pos((t, r, d, l))
+    if next_pos:
+        if next_pos[0] == CellType.WALKED:
+            mark_dead(maze, pos)
+        else:
+            mark_walked(maze, pos)
+        return solve_maze(maze, (next_pos[1], next_pos[2]), end)
+    else:
+        mark_dead(maze, pos)
+        return False
+```
 ## pygame做界面展示
 简单的实现，没啥可说的
