@@ -2,7 +2,7 @@ import time
 
 
 # 单元格类型
-# 0 - 路，1 - 墙
+# 0 - 路，1 - 墙，2-走过的路，4-死胡同
 class CellType:
     ROAD = 0
     WALL = 1
