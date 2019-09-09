@@ -3,13 +3,7 @@
 > `prime算法生成迷宫` `递归解迷宫` `pygame`
 
 ## 运行截图
-![](images/SCREEN_SHOT_01.jpg)
-
-![](images/SCREEN_SHOT_02.jpg)
-
-![](images/SCREEN_SHOT_03.jpg)
-
-![](images/SCREEN_SHOT_04.jpg)
+![](images/SCREEN_SHOT.gif)
 
 ## prime算法生成迷宫
 
